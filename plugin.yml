@@ -46,6 +46,8 @@ configuration:
     volumes:
       type: [ string, array ]
       minimum: 1
+    pre-build-command:
+      type: string
     command:
       type: array
     skip-checkout:

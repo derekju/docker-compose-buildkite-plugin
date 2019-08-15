@@ -5,6 +5,7 @@ image_repository="$(plugin_read_config IMAGE_REPOSITORY)"
 pull_retries="$(plugin_read_config PULL_RETRIES "0")"
 push_retries="$(plugin_read_config PUSH_RETRIES "0")"
 override_file="docker-compose.buildkite-${BUILDKITE_BUILD_NUMBER}-override.yml"
+pre_build_command="$(plugin_read_config PRE_BUILD_COMMAND)"
 build_images=()
 
 service_name_cache_from_var() {
@@ -83,6 +84,11 @@ fi
 while read -r arg ; do
   [[ -n "${arg:-}" ]] && build_params+=("--build-arg" "${arg}")
 done <<< "$(plugin_read_list ARGS)"
+
+if [[ ! -z "$pre_build_command" ]]; then
+  echo "~~~ :docker: Running pre-build command"
+  $(pre_build_command)
+fi
 
 echo "+++ :docker: Building services ${services[*]}"
 run_docker_compose -f "$override_file" build "${build_params[@]}" "${services[@]}"
