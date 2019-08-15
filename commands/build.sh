@@ -87,7 +87,7 @@ done <<< "$(plugin_read_list ARGS)"
 
 if [[ ! -z "$pre_build_command" ]]; then
   echo "~~~ :docker: Running pre-build command"
-  $(pre_build_command)
+  ($pre_build_command)
 fi
 
 echo "+++ :docker: Building services ${services[*]}"
